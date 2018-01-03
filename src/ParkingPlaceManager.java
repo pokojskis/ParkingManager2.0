@@ -4,10 +4,14 @@ import java.util.Random;
 
 public class ParkingPlaceManager {
 
-    Map<Integer, ParkingPlace> parkingPlaceMap = new HashMap<>();
-    protected Integer parkingPlaceID;
+    private Map<Integer, ParkingPlace> parkingPlaceMap;
+    private Integer parkingPlaceID;
     private Random random;
     private ParkingPlace parkingPlace;
+
+    public ParkingPlaceManager() {
+        parkingPlaceMap = new HashMap<>();
+    }
 
     void addParkingPlace() {
         for (int i = 1; i <= 100; i++) {

@@ -1,7 +1,12 @@
 public class Menu {
 
-    ParkingPlaceManager parkingPlaceManager = new ParkingPlaceManager();
-    MenuLogic menuLogic = new MenuLogic(parkingPlaceManager);
+    private ParkingPlaceManager parkingPlaceManager;
+    private MenuLogic menuLogic;
+
+    public Menu() {
+        parkingPlaceManager = new ParkingPlaceManager();
+        menuLogic = new MenuLogic(parkingPlaceManager);
+    }
 
     public void start() {
         parkingPlaceManager.addParkingPlace();

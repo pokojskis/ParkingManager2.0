@@ -8,13 +8,14 @@ import java.util.Scanner;
 public class MenuLogic {
 
     private static final double MAXIMUM_CHARGE = 5.00;
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
     private String username;
-    ParkingPlaceManager parkingPlaceManager;
+    private ParkingPlaceManager parkingPlaceManager;
     private double budget;
 
     public MenuLogic (ParkingPlaceManager parkingPlaceManager) {
         this.parkingPlaceManager = parkingPlaceManager;
+        scanner = new Scanner(System.in);
     }
 
     void printMenu() {
@@ -39,10 +40,10 @@ public class MenuLogic {
         } while (true);
     }
 
-    void parseAnswer(int chooseAction) {
+    private void parseAnswer(int chooseAction) {
         switch (chooseAction) {
             case 1:
-                System.out.println("Amount of currently free parking places: " + (countFreeCarSlots() + countFreeHGVSlots() + countFreeMotoSlots()));
+                System.out.println("Amount of currently free parking places: " + countFreeSlots());
                 System.out.print("====================================================================================\n");
                 System.out.println("Amount of free parking places for CARS: " + countFreeCarSlots());
                 System.out.print("====================================================================================\n");
@@ -83,7 +84,7 @@ public class MenuLogic {
             case 5:
                 System.out.println("Enter amount: ");
                 double charge = Double.parseDouble(scanner.nextLine());
-                charge(charge);
+                chargeDrivers(charge);
                 printBudget(budget);
                 break;
 
@@ -126,14 +127,14 @@ public class MenuLogic {
         System.out.println("Hello, " + username + "!\n");
     }
 
-    void menuGoodBye() {
+    private void menuGoodBye() {
         System.out.println("\nGoodbye, " + username + "!");
     }
 
-    int countFreeCarSlots() {      //3 niemalze identyczne metody wscisniete w 1, sprawdz koniecznie, czy dziala
+    private int countFreeCarSlots() {
         int freeCarSlotsCounter = 0;
 
-        for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) { //wstawiony getter do mapy zamiast fielda
+        for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
             if (integerParkingPlaceEntry.getValue().getParkingType() == ParkingType.CAR
                     && !integerParkingPlaceEntry.getValue().isTaken()) {
                 freeCarSlotsCounter++;
@@ -142,9 +143,9 @@ public class MenuLogic {
         return freeCarSlotsCounter;
     }
 
-    int countFreeMotoSlots() {
+    private int countFreeMotoSlots() {
         int freeMotoSlotsCounter = 0;
-        for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) { //wstawiony getter do mapy zamiast fielda
+        for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
             if (integerParkingPlaceEntry.getValue().getParkingType() == ParkingType.MOTORCYCLE
                     && !integerParkingPlaceEntry.getValue().isTaken()) {
                 freeMotoSlotsCounter++;
@@ -153,10 +154,10 @@ public class MenuLogic {
         return freeMotoSlotsCounter;
     }
 
-    int countFreeHGVSlots() {
+    private int countFreeHGVSlots() {
         int freeHGVSlotsCounter = 0;
 
-        for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) { //wstawiony getter do mapy zamiast fielda
+        for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
             if (integerParkingPlaceEntry.getValue().getParkingType() == ParkingType.HGV
                     && !integerParkingPlaceEntry.getValue().isTaken()) {
                 freeHGVSlotsCounter++;
@@ -165,7 +166,12 @@ public class MenuLogic {
         return freeHGVSlotsCounter;
     }
 
-    void printFreeCarSlotsID() {
+    private int countFreeSlots() {
+        int freeParkingSlots = (countFreeCarSlots() + countFreeHGVSlots() + countFreeMotoSlots());
+        return freeParkingSlots;
+    }
+
+    private void printFreeCarSlotsID() {
         System.out.print("Currently free parking places for CARS:  ");
 
         for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
@@ -177,7 +183,7 @@ public class MenuLogic {
         System.out.print("\n====================================================================================");
     }
 
-    void printFreeMotoSlotsID() {
+    private void printFreeMotoSlotsID() {
         System.out.print("\nCurrently free parking places for MOTORCYCLES:  ");
 
         for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
@@ -189,7 +195,7 @@ public class MenuLogic {
         System.out.print("\n====================================================================================");
     }
 
-    void printFreeHGVSlotsID() {
+    private void printFreeHGVSlotsID() {
         System.out.print("\nCurrently free parking places for HGV's:  ");
 
         for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
@@ -201,7 +207,7 @@ public class MenuLogic {
         System.out.print("\n====================================================================================");
     }
 
-    void printTakenCarSlotsID() {
+    private void printTakenCarSlotsID() {
         System.out.print("\nCurrently taken parking places for CARS: ");
 
         for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
@@ -213,7 +219,7 @@ public class MenuLogic {
         System.out.print("\n====================================================================================");
     }
 
-    void printTakenMotoSlotsID() {
+    private void printTakenMotoSlotsID() {
         System.out.print("\nCurrently taken parking places for MOTORCYCLES: ");
 
         for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
@@ -225,7 +231,7 @@ public class MenuLogic {
         System.out.print("\n====================================================================================");
     }
 
-    void printTakenHGVSlotsID() {
+    private void printTakenHGVSlotsID() {
         System.out.print("\nCurrently taken parking places for HGV's: ");
 
         for (Map.Entry<Integer, ParkingPlace> integerParkingPlaceEntry : parkingPlaceManager.getParkingPlaceMap().entrySet()) {
@@ -237,7 +243,7 @@ public class MenuLogic {
         System.out.print("\n====================================================================================");
     }
 
-    void parkVehicle (ParkingType parkingType) {
+    private void parkVehicle(ParkingType parkingType) {
         for (ParkingPlace parkingPlace : parkingPlaceManager.getParkingPlaceMap().values()) {
             if (parkingPlace.getParkingType() == parkingType && !parkingPlace.isTaken()) {
                 parkingPlace.setTaken(true);
@@ -246,7 +252,7 @@ public class MenuLogic {
         }
     }
 
-    void chooseTypeOfPlaceToPark (String vehicleType) {
+    private void chooseTypeOfPlaceToPark(String vehicleType) {
         switch (vehicleType) {
             case "C":
                 parkVehicle(ParkingType.CAR);
@@ -265,13 +271,13 @@ public class MenuLogic {
         }
     }
 
-    void dismissParkingPlace() {
+    private void dismissParkingPlace() {
         for (ParkingPlace parkingPlace : parkingPlaceManager.getParkingPlaceMap().values()) {
             parkingPlace.setTaken(false);
         }
     }
 
-    void swapVehiclesByPlaces(int firstVehicleID, int secondVehicleID) {
+    private void swapVehiclesByPlaces(int firstVehicleID, int secondVehicleID) {
         if (parkingPlaceManager.getParkingPlaceMap().get(firstVehicleID).isTaken() || parkingPlaceManager.getParkingPlaceMap().get(secondVehicleID).isTaken()) {
             if (parkingPlaceManager.getParkingPlaceMap().get(firstVehicleID).getParkingType() == (parkingPlaceManager.getParkingPlaceMap().get(secondVehicleID).getParkingType())) {
                 parkingPlaceManager.getParkingPlaceMap().put(firstVehicleID, parkingPlaceManager.getParkingPlaceMap().put(secondVehicleID, parkingPlaceManager.getParkingPlaceMap().get(firstVehicleID)));
@@ -284,11 +290,11 @@ public class MenuLogic {
         }
     }
 
-    void charge (double charge) {
+    private void chargeDrivers(double charge) {
         if (charge <= MAXIMUM_CHARGE) {
             for (ParkingPlace parkingPlace : parkingPlaceManager.getParkingPlaceMap().values()) {
                 if (parkingPlace.isTaken()) {
-                    chargeDrivers(charge);
+                    collectFees(charge);
                 }
             }
         } else {
@@ -296,12 +302,12 @@ public class MenuLogic {
         }
     }
 
-    void exodusNotification (int driversLeftCounter) {
+    private void exodusNotification(int driversLeftCounter) {
         System.out.println("The number of drivers, who left the parking lot due to a raised fees: " + driversLeftCounter);
 
     }
 
-    void exodus(double charge) {
+    private void exodus(double charge) {
         Random random = new Random();
         int driversLeftCounter = 0;
         for (ParkingPlace parkingPlace : parkingPlaceManager.getParkingPlaceMap().values()) {
@@ -310,23 +316,22 @@ public class MenuLogic {
                 if (!parkingPlace.isTaken()) {
                     driversLeftCounter++;
                 } else {
-                    chargeDrivers(charge);
+                    collectFees(charge);
                 }
             }
         }
         exodusNotification(driversLeftCounter);
     }
 
-    double chargeDrivers(double charge) {
+    private void collectFees(double charge) {
         budget += charge;
-        return budget;
     }
 
-    void printBudget (double budget) {
+    private void printBudget(double budget) {
         System.out.println("Budget available: " + budget);
     }
 
-    void buildNewParkingPlace (String typeOfSlotToBuild) {
+    private void buildNewParkingPlace(String typeOfSlotToBuild) {
         switch (typeOfSlotToBuild) {
             case "C":
                 if (budget >= 200) {
@@ -363,7 +368,7 @@ public class MenuLogic {
             }
         }
 
-    void saveToFile() throws IOException {
+    private void saveToFile() throws IOException {
         Files.write(Paths.get(".save.txt"), () -> parkingPlaceManager.getParkingPlaceMap().entrySet().stream().<CharSequence>map(e -> e.getKey() + "\t" + e.getValue()).iterator());
     }
 
